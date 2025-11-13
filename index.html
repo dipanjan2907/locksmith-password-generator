@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locksmith</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <h2 id="heading">Password and PIN Generator</h2>
+        <div class="sprt1">
+            <div id="passgen">
+                <h4 id="tle">Password Generator</h4>
+                <input class="inp1" type="text" placeholder="Generated Password Here" readonly>
+                <h5 class="lng">Length: <input class="inp2" type="number" min="2"></h5>
+                <div id="btns">
+                    <button class="btn1">Generate</button>
+                    <button class="copy" id="c1">Copy</button>
+                </div>
+            </div>
+            <div id="options">
+                <h4>Select Features:</h4>
+                <label><input type="checkbox" class="opt" value="uppercase"> Uppercase</label>
+                <label><input type="checkbox" class="opt" value="lowercase"> Lowercase</label>
+                <label><input type="checkbox" class="opt" value="numbers"> Numbers</label>
+                <label><input type="checkbox" class="opt" value="symbols"> Symbols</label>
+                <label><input type="radio" id="spctyp" value="spctyp"> Special Type</label>
+            </div>
+
+        </div>
+        <div class="sprt2">
+            <div id="pingen">
+                <h4 id="tle">PIN Generator</h4>
+                <input class="inp4" type="text" placeholder="Generated PIN Here" readonly>
+                <h5 class="lng">Length: <input class="inp5" type="number" min="2"></h5>
+                <div id="btns">
+                    <button class="btn2">Generate</button>
+                    <button class="copy" id="c2">Copy</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="script.js" defer></script>
+</body>
+
+</html>
