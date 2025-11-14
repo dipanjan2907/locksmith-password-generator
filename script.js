@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (radiobtn.checked) {
       checkboxes.forEach((cb) => (cb.checked = false));
       mode = "special";
+      if (passLength.value < 4) passLength.value = 4;
     }
   });
 
@@ -57,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cb.addEventListener("click", () => {
       radiobtn.checked = false;
       mode = "checkbox";
+      passLength.value = selectedSets.length;
     });
   });
 
@@ -92,8 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ------------------------------------------------------------ */
 
   function generateSpecialPassword(length) {
-    if (length < 6) {
-      alert("Special type needs at least length 6");
+    if (length < 4) {
+      alert("Special type needs at least length 4");
       return null;
     }
 
@@ -113,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       password += cryptoRandChar(charSets.numbers);
     }
 
-    return cryptoShuffle(password);
+    return password;
   }
 
   /* ------------------------------------------------------------
@@ -162,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btn2.addEventListener("click", () => {
     copyBtn2.innerText = "Copy";
-
     const length = Number(pinLengthInput.value);
     if (length < 2) return alert("PIN length ≥ 2");
 
@@ -181,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ------------------------------------------------------------ */
 
   copyBtn2.addEventListener("click", () => {
-    if (!pin.placeholder || pin.placeholder === "0") {
+    if (pin.placeholder == "Generated PIN Here") {
       return alert("Nothing to copy!");
     }
 
