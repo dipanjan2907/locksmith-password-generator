@@ -19,15 +19,40 @@ document.addEventListener("DOMContentLoaded", () => {
     symbols: "!@#$&",
   };
 
-  // Switch to special mode
-  radiobtn.addEventListener("click", (event) => {
-    if (event.target.checked) {
+  /* ------------------------------------------------------------
+          CRYPTO FUNCTIONS
+    ------------------------------------------------------------ */
+
+  function cryptoRandomIndex(max) {
+    const arr = new Uint32Array(1);
+    crypto.getRandomValues(arr);
+    return arr[0] % max;
+  }
+
+  function cryptoRandChar(set) {
+    return set[cryptoRandomIndex(set.length)];
+  }
+
+  function cryptoShuffle(str) {
+    let arr = [...str];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = cryptoRandomIndex(i + 1);
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.join("");
+  }
+
+  /* ------------------------------------------------------------
+      MODE SWITCHING
+    ------------------------------------------------------------ */
+
+  radiobtn.addEventListener("click", () => {
+    if (radiobtn.checked) {
       checkboxes.forEach((cb) => (cb.checked = false));
       mode = "special";
     }
   });
 
-  // Switch to checkbox mode
   checkboxes.forEach((cb) => {
     cb.addEventListener("click", () => {
       radiobtn.checked = false;
@@ -35,114 +60,134 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Password Generation Logic
-  btn1.addEventListener("click", () => {
+  /* ------------------------------------------------------------
+       PASSWORD GENERATION (CHECKBOX MODE)
+    ------------------------------------------------------------ */
+  function generateCheckboxPassword(length) {
+    const selectedSets = [];
+
+    checkboxes.forEach((cb) => {
+      if (cb.checked) selectedSets.push(charSets[cb.value]);
+    });
+
+    if (selectedSets.length === 0) {
+      alert("Pick at least one option!");
+      return null;
+    }
+
+    // Guarantee at least one from each chosen set
+    let password = selectedSets.map((set) => cryptoRandChar(set)).join("");
+
+    // Fill remaining length
+    while (password.length < length) {
+      const randomSet = selectedSets[cryptoRandomIndex(selectedSets.length)];
+      password += cryptoRandChar(randomSet);
+    }
+
+    return cryptoShuffle(password);
+  }
+
+  /* ------------------------------------------------------------
+       PASSWORD GENERATION (SPECIAL MODE)
+    ------------------------------------------------------------ */
+
+  function generateSpecialPassword(length) {
+    if (length < 6) {
+      alert("Special type needs at least length 6");
+      return null;
+    }
+
     let password = "";
-    // pass.placeholder = "";
+
+    password += cryptoRandChar(charSets.uppercase);
+    password += cryptoRandChar(charSets.lowercase);
+
+    for (let i = 0; i < length / 2 - 2; i++) {
+      const set = Math.random() < 0.5 ? charSets.uppercase : charSets.lowercase;
+      password += cryptoRandChar(set);
+    }
+
+    password += cryptoRandChar(charSets.symbols);
+
+    while (password.length < length) {
+      password += cryptoRandChar(charSets.numbers);
+    }
+
+    return cryptoShuffle(password);
+  }
+
+  /* ------------------------------------------------------------
+       GENERATE PASSWORD BUTTON
+    ------------------------------------------------------------ */
+
+  btn1.addEventListener("click", () => {
     copyBtn1.innerText = "Copy";
-    let length = Number(passLength.value);
+    const length = Number(passLength.value);
+    let password = null;
 
     if (mode === "checkbox") {
-      if (length > 1) {
-        let chars = "";
-        const selectedSets = [];
-
-        checkboxes.forEach((cb) => {
-          if (cb.checked) {
-            chars += charSets[cb.value];
-            selectedSets.push(charSets[cb.value]);
-          }
-        });
-
-        if (!chars) {
-          alert("Please select at least one option!");
-          return;
-        }
-
-        // guarantee at least one char from each selected set
-        selectedSets.forEach((set) => {
-          password += set[Math.floor(Math.random() * set.length)];
-        });
-
-        while (password.length < length) {
-          const randomSet =
-            selectedSets[Math.floor(Math.random() * selectedSets.length)];
-          password += randomSet[Math.floor(Math.random() * randomSet.length)];
-        }
-
-        // Shuffle
-        password = password
-          .split("")
-          .sort(() => 0.5 - Math.random())
-          .join("");
-
-        pass.classList.add("placeholder-black");
-        btn1.innerText = "Regenerate";
-        pass.placeholder = password;
-      } else alert("Password Length must not be less than 2");
+      if (length < 2) return alert("Password length ≥ 2");
+      password = generateCheckboxPassword(length);
     } else if (mode === "special") {
-      if (length >= 6) {
-        function randChar(set) {
-          return set[Math.floor(Math.random() * set.length)];
-        }
-        password += randChar(charSets.uppercase);
-        password += randChar(charSets.lowercase);
-        for (let i = 0; i < length / 2 - 2; i++) {
-          const set =
-            Math.random() < 0.5 ? charSets.uppercase : charSets.lowercase;
-          password += randChar(set);
-        }
-        password += randChar(charSets.symbols);
-        for (let i = password.length; i < length; i++) {
-          password += randChar(charSets.numbers);
-        }
-        if (password.length < length) password += randChar(charSets.symbols);
-
-        pass.classList.add("placeholder-black");
-        btn1.innerText = "Regenerate";
-        pass.placeholder = password;
-      } else alert("Password Length must not be less than 6");
+      password = generateSpecialPassword(length);
     } else {
-      alert("Please select a mode (checkboxes or Special Type)");
+      return alert("Choose a mode (Checkbox or Special)");
+    }
+
+    if (password) {
+      pass.placeholder = password;
+      pass.classList.add("placeholder-black");
+      btn1.innerText = "Regenerate";
     }
   });
 
-  // Copy for password
+  /* ------------------------------------------------------------
+       COPY PASSWORD
+    ------------------------------------------------------------ */
+
   copyBtn1.addEventListener("click", () => {
-    if (pass.placeholder !== "Generated Password Here") {
-      navigator.clipboard
-        .writeText(pass.placeholder)
-        .then(() => (copyBtn1.innerText = "Copied!"))
-        .catch((err) => console.error("Copy failed: ", err));
-    } else alert("Nothing to copy!");
+    if (pass.placeholder === "Generated Password Here") {
+      return alert("Nothing to copy!");
+    }
+
+    navigator.clipboard
+      .writeText(pass.placeholder)
+      .then(() => (copyBtn1.innerText = "Copied!"))
+      .catch((err) => console.error("Copy failed: ", err));
   });
 
-  // PIN GENERATION
+  /* ------------------------------------------------------------
+       PIN GENERATION
+    ------------------------------------------------------------ */
+
   btn2.addEventListener("click", () => {
     copyBtn2.innerText = "Copy";
-    let l = Number(pinLengthInput.value);
-    if (l > 1) {
-      btn2.innerText = "Regenerate";
-      let tpin = "";
-      for (let i = 0; i < l; i++) {
-        const randomDigit = Math.floor(Math.random() * 9) + 1;
-        tpin += randomDigit;
-      }
-      tpin = Number(tpin);
-      pin.placeholder = tpin;
-      pin.classList.add("placeholder-black");
-    } else alert("PIN Length must not be less than 2");
+
+    const length = Number(pinLengthInput.value);
+    if (length < 2) return alert("PIN length ≥ 2");
+
+    let pinValue = "";
+    for (let i = 0; i < length; i++) {
+      pinValue += cryptoRandomIndex(9) + 1; // 1-9
+    }
+
+    pin.placeholder = pinValue;
+    pin.classList.add("placeholder-black");
+    btn2.innerText = "Regenerate";
   });
+
+  /* ------------------------------------------------------------
+       COPY PIN
+    ------------------------------------------------------------ */
+
   copyBtn2.addEventListener("click", () => {
-    if (pin.placeholder > 0) {
-      navigator.clipboard
-        .writeText(pin.placeholder) // directly copy the value
-        .then(() => {
-          copyBtn2.innerText = "Copied!";
-        })
-        .catch((err) => {
-          console.error("Copy failed: ", err);
-        });
-    } else alert("Nothing to copy!");
+    if (!pin.placeholder || pin.placeholder === "0") {
+      return alert("Nothing to copy!");
+    }
+
+    navigator.clipboard
+      .writeText(pin.placeholder)
+      .then(() => (copyBtn2.innerText = "Copied!"))
+      .catch((err) => console.error("Copy failed: ", err));
   });
 });
