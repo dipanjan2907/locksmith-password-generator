@@ -2,7 +2,7 @@
 
 Locksmith is a sleek and powerful password and PIN generator built using HTML, CSS, and JavaScript.
 It allows you to create strong, secure, and random passwords or numeric PINs in seconds — no external libraries needed. This version uses cryptographically secure randomness to ensure maximum security.
-
+Deployed at https://dipanjan2907.github.io/locksmith-password-generator/
 🧠 Features
 
 Smooth animated gradient background for a modern, premium feel
