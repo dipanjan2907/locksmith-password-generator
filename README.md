@@ -1,89 +1,16 @@
-🔐 Locksmith — Password & PIN Generator
+# React + Vite
 
-Locksmith is a sleek and powerful password and PIN generator built using HTML, CSS, and JavaScript.
-It allows you to create strong, secure, and random passwords or numeric PINs in seconds — no external libraries needed. This version uses cryptographically secure randomness to ensure maximum security.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-🧠 Features
+Currently, two official plugins are available:
 
-Smooth animated gradient background for a modern, premium feel
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-✅ Generate strong, customizable passwords
+## React Compiler
 
-🔢 Generate secure numeric PINs
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-🧩 Choose character sets: uppercase, lowercase, numbers, symbols
+## Expanding the ESLint configuration
 
-🧠 Special “Smart Type” mode: generates balanced passwords with guaranteed character diversity
-
-🔒 Uses cryptographically secure random number generation (crypto.getRandomValues)
-
-🎲 Uses secure Fisher–Yates shuffle for unbiased password randomness
-
-📋 One-click copy to clipboard for passwords and PINs
-
-🎨 Beautiful gradient UI with hover effects
-
-⚙️ Tech Stack
-
-HTML5 — Structure
-
-CSS3 — Styling & Animations
-
-JavaScript (Vanilla) — Core Logic with cryptographically secure random functions
-
-🖥️ How to Run
-
-Clone this repository:
-
-git clone https://github.com/dipanjan2907/locksmith-password-generator.git
-cd locksmith-password-generator
-
-Open index.html in your favorite browser.
-
-🔍 How It Works
-
-Character Sets
-You can select uppercase, lowercase, numbers, and symbols for password generation.
-
-Modes
-
-Checkbox Mode: Choose which character sets to include; guarantees at least one character from each selected set.
-
-Special Type Mode: Automatically generates a balanced password using uppercase, lowercase, symbols, and numbers for strong security.
-
-Cryptographically Secure Randomness
-
-Uses crypto.getRandomValues() for generating secure random numbers instead of Math.random().
-
-Each character and PIN digit is selected securely, ensuring unpredictability.
-
-Fisher–Yates Shuffle
-
-Shuffles generated passwords securely to avoid any predictable patterns.
-
-Ensures each permutation is equally likely.
-
-📋 Copy to Clipboard
-
-Simply click the “Copy” button next to the generated password or PIN.
-
-Secure and easy for quick use.
-
-🛠️ Contribution
-
-Contributions are welcome!
-
-Fork the repository
-
-Create a new branch (git checkout -b feature/YourFeature)
-
-Make improvements
-
-Submit a Pull Request
-
-Any improvements to the UI, new password generation features, or optimizations are highly appreciated.
-
-⚖️ Security Note
-
-This tool is secure for personal use, as it uses OS-level cryptography for generating passwords and PINs.
-However, always ensure your environment is secure when using generated passwords.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
