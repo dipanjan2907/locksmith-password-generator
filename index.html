@@ -6,41 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Locksmith</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <div id="container">
-        <h2 id="heading">Password and PIN Generator</h2>
-        <div class="sprt1">
-            <div id="passgen">
-                <h4 id="tle">Password Generator</h4>
-                <input class="inp1" type="text" placeholder="Generated Password Here" readonly>
-                <h5 class="lng">Length: <input class="inp2" type="number" min="2"></h5>
-                <div id="btns">
-                    <button class="btn1">Generate</button>
-                    <button class="copy" id="c1">Copy</button>
-                </div>
-            </div>
-            <div id="options">
-                <h4>Select Features:</h4>
-                <label><input type="checkbox" class="opt" value="uppercase"> Uppercase</label>
-                <label><input type="checkbox" class="opt" value="lowercase"> Lowercase</label>
-                <label><input type="checkbox" class="opt" value="numbers"> Numbers</label>
-                <label><input type="checkbox" class="opt" value="symbols"> Symbols</label>
-                <label><input type="radio" id="spctyp" value="spctyp"> Special Type</label>
-            </div>
+    <div class="glass-container">
+        <h2 id="heading">Locksmith <i class="fas fa-lock"></i></h2>
+        <p class="subtitle">Secure Password & PIN Generator</p>
 
-        </div>
-        <div class="sprt2">
-            <div id="pingen">
-                <h4 id="tle">PIN Generator</h4>
-                <input class="inp4" type="text" placeholder="Generated PIN Here" readonly>
-                <h5 class="lng">Length: <input class="inp5" type="number" min="2"></h5>
-                <div id="btns">
-                    <button class="btn2">Generate</button>
-                    <button class="copy" id="c2">Copy</button>
+        <div class="generators-wrapper">
+            <!-- Password Generator -->
+            <div class="generator-card" id="passgen">
+                <div class="card-header">
+                    <i class="fas fa-key"></i>
+                    <h4>Password Generator</h4>
+                </div>
+                <div class="input-group">
+                    <input class="result-display" type="text" placeholder="Generated Password" readonly>
+                    <button class="copy-btn" id="c1" title="Copy to Clipboard"><i class="far fa-copy"></i></button>
+                </div>
+                <div class="controls">
+                    <div class="length-control">
+                        <label>Length: <span id="pass-length-val">12</span></label>
+                        <input class="length-slider" type="range" min="4" max="32" value="12">
+                    </div>
                 </div>
 
+                <div class="options-grid" id="options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="opt" value="uppercase" checked>
+                        <span class="checkmark"></span>
+                        Uppercase
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="opt" value="lowercase" checked>
+                        <span class="checkmark"></span>
+                        Lowercase
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="opt" value="numbers" checked>
+                        <span class="checkmark"></span>
+                        Numbers
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="opt" value="symbols">
+                        <span class="checkmark"></span>
+                        Symbols
+                    </label>
+                </div>
+
+                <button class="generate-btn btn1">Generate Password</button>
+            </div>
+
+            <!-- PIN Generator -->
+            <div class="generator-card" id="pingen">
+                <div class="card-header">
+                    <i class="fas fa-th"></i>
+                    <h4>PIN Generator</h4>
+                </div>
+                <div class="input-group">
+                    <input class="result-display" type="text" placeholder="Generated PIN" readonly>
+                    <button class="copy-btn" id="c2" title="Copy to Clipboard"><i class="far fa-copy"></i></button>
+                </div>
+                <div class="controls">
+                    <div class="length-control">
+                        <label>Length: <span id="pin-length-val">4</span></label>
+                        <input class="length-slider" type="range" min="2" max="12" value="4">
+                    </div>
+                </div>
+                <button class="generate-btn btn2">Generate PIN</button>
             </div>
         </div>
     </div>

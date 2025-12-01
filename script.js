@@ -1,16 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const pass = document.querySelector(".inp1");
-  const passLength = document.querySelector(".inp2");
+  // Selectors
+  const pass = document.querySelector("#passgen .result-display");
+  const passLength = document.querySelector("#passgen .length-slider");
+  const passLengthDisplay = document.getElementById("pass-length-val");
   const copyBtn1 = document.querySelector("#c1");
   const btn1 = document.querySelector(".btn1");
-  const btn2 = document.querySelector(".btn2");
-  const pin = document.querySelector(".inp4");
-  const pinLengthInput = document.querySelector(".inp5");
-  const copyBtn2 = document.querySelector("#c2");
-  const checkboxes = document.querySelectorAll(".opt");
-  const radiobtn = document.getElementById("spctyp");
 
-  let mode = ""; // "checkbox" or "special"
+  const pin = document.querySelector("#pingen .result-display");
+  const pinLength = document.querySelector("#pingen .length-slider");
+  const pinLengthDisplay = document.getElementById("pin-length-val");
+  const btn2 = document.querySelector(".btn2");
+  const copyBtn2 = document.querySelector("#c2");
+
+  const checkboxes = document.querySelectorAll(".opt");
 
   const charSets = {
     uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -43,29 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ------------------------------------------------------------
-      MODE SWITCHING
+       PASSWORD GENERATION
     ------------------------------------------------------------ */
-
-  radiobtn.addEventListener("click", () => {
-    if (radiobtn.checked) {
-      checkboxes.forEach((cb) => (cb.checked = false));
-      mode = "special";
-      if (passLength.value < 4) passLength.value = 4;
-    }
-  });
-
-  checkboxes.forEach((cb) => {
-    cb.addEventListener("click", () => {
-      radiobtn.checked = false;
-      mode = "checkbox";
-      passLength.value = selectedSets.length;
-    });
-  });
-
-  /* ------------------------------------------------------------
-       PASSWORD GENERATION (CHECKBOX MODE)
-    ------------------------------------------------------------ */
-  function generateCheckboxPassword(length) {
+  function generatePassword(length) {
     const selectedSets = [];
 
     checkboxes.forEach((cb) => {
@@ -90,57 +72,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ------------------------------------------------------------
-       PASSWORD GENERATION (SPECIAL MODE)
-    ------------------------------------------------------------ */
-
-  function generateSpecialPassword(length) {
-    if (length < 4) {
-      alert("Special type needs at least length 4");
-      return null;
-    }
-
-    let password = "";
-
-    password += cryptoRandChar(charSets.uppercase);
-    password += cryptoRandChar(charSets.lowercase);
-
-    for (let i = 0; i < length / 2 - 2; i++) {
-      const set = Math.random() < 0.5 ? charSets.uppercase : charSets.lowercase;
-      password += cryptoRandChar(set);
-    }
-
-    password += cryptoRandChar(charSets.symbols);
-
-    while (password.length < length) {
-      password += cryptoRandChar(charSets.numbers);
-    }
-
-    return password;
-  }
-
-  /* ------------------------------------------------------------
        GENERATE PASSWORD BUTTON
     ------------------------------------------------------------ */
 
   btn1.addEventListener("click", () => {
-    copyBtn1.innerText = "Copy";
+    copyBtn1.innerHTML = '<i class="far fa-copy"></i>'; // Reset icon
     const length = Number(passLength.value);
-    let password = null;
 
-    if (mode === "checkbox") {
-      if (length < 2) return alert("Password length ≥ 2");
-      password = generateCheckboxPassword(length);
-    } else if (mode === "special") {
-      password = generateSpecialPassword(length);
-    } else {
-      return alert("Choose a mode (Checkbox or Special)");
-    }
+    if (length < 2) return alert("Password length ≥ 2");
+
+    const password = generatePassword(length);
 
     if (password) {
-      pass.placeholder = password;
-      pass.classList.add("placeholder-black");
-      btn1.innerText = "Regenerate";
+      pass.value = password; // Use value instead of placeholder for better UX
+      // pass.placeholder = password; // Fallback if we want to keep placeholder style
+      // But value is better for copying.
+      // Let's stick to value.
+      btn1.innerText = "Regenerate Password";
     }
+  });
+
+  // Update length display
+  passLength.addEventListener("input", () => {
+    passLengthDisplay.innerText = passLength.value;
   });
 
   /* ------------------------------------------------------------
@@ -148,13 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
     ------------------------------------------------------------ */
 
   copyBtn1.addEventListener("click", () => {
-    if (pass.placeholder === "Generated Password Here") {
+    if (!pass.value && pass.placeholder === "Generated Password") {
       return alert("Nothing to copy!");
     }
 
+    const textToCopy = pass.value || pass.placeholder;
+
     navigator.clipboard
-      .writeText(pass.placeholder)
-      .then(() => (copyBtn1.innerText = "Copied!"))
+      .writeText(textToCopy)
+      .then(() => {
+        copyBtn1.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => {
+          copyBtn1.innerHTML = '<i class="far fa-copy"></i>';
+        }, 2000);
+      })
       .catch((err) => console.error("Copy failed: ", err));
   });
 
@@ -163,8 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ------------------------------------------------------------ */
 
   btn2.addEventListener("click", () => {
-    copyBtn2.innerText = "Copy";
-    const length = Number(pinLengthInput.value);
+    copyBtn2.innerHTML = '<i class="far fa-copy"></i>';
+    const length = Number(pinLength.value);
     if (length < 2) return alert("PIN length ≥ 2");
 
     let pinValue = "";
@@ -172,9 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
       pinValue += cryptoRandomIndex(9) + 1; // 1-9
     }
 
-    pin.placeholder = pinValue;
-    pin.classList.add("placeholder-black");
-    btn2.innerText = "Regenerate";
+    pin.value = pinValue;
+    btn2.innerText = "Regenerate PIN";
+  });
+
+  // Update PIN length display
+  pinLength.addEventListener("input", () => {
+    pinLengthDisplay.innerText = pinLength.value;
   });
 
   /* ------------------------------------------------------------
@@ -182,13 +147,20 @@ document.addEventListener("DOMContentLoaded", () => {
     ------------------------------------------------------------ */
 
   copyBtn2.addEventListener("click", () => {
-    if (pin.placeholder == "Generated PIN Here") {
+    if (!pin.value && pin.placeholder === "Generated PIN") {
       return alert("Nothing to copy!");
     }
 
+    const textToCopy = pin.value || pin.placeholder;
+
     navigator.clipboard
-      .writeText(pin.placeholder)
-      .then(() => (copyBtn2.innerText = "Copied!"))
+      .writeText(textToCopy)
+      .then(() => {
+        copyBtn2.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => {
+          copyBtn2.innerHTML = '<i class="far fa-copy"></i>';
+        }, 2000);
+      })
       .catch((err) => console.error("Copy failed: ", err));
   });
 });
